@@ -61,12 +61,12 @@
 int analogJoyClickEnabled = 1;
 int leftGripEnabled = 1;
 int steamButtonEnabled = 1;
-int leftTrackpadEnabled = 1;
+int leftTrackpadClickEnabled = 1;
 int leftTriggerEnabled = 1;
 int leftBumperEnabled = 1;
 int frontLeftEnabled = 1;
 int frontRightEnabled = 1;
-int rightTrackpadEnabled = 1;
+int rightTrackpadClickEnabled = 1;
 int yButtonEnabled = 1;
 int rightTriggerEnabled = 1;
 int rightBumperEnabled = 1;
@@ -134,7 +134,7 @@ void initButtons(void) {
 			steamButtonEnabled = isEnabled;
 			break;
 		case 3:
-			leftTrackpadEnabled = isEnabled;
+			leftTrackpadClickEnabled = isEnabled;
 			break;
 		case 4:
 			leftTriggerEnabled = isEnabled;
@@ -149,7 +149,7 @@ void initButtons(void) {
 			frontRightEnabled = isEnabled;
 			break;
 		case 8:
-			rightTrackpadEnabled = isEnabled;
+			rightTrackpadClickEnabled = isEnabled;
 			break;
 		case 9:
 			yButtonEnabled = isEnabled;
@@ -252,14 +252,14 @@ int getLeftGripState(void) {
  * \return true if Right Trackpad Click Button is being pressed. False otherwise.
  */
 int getRightTrackpadClickState(void) {
-	return rightTrackpadEnabled && !Chip_GPIO_ReadPortBit(LPC_GPIO, GPIO_R_TRACKPAD);
+	return rightTrackpadClickEnabled && !Chip_GPIO_ReadPortBit(LPC_GPIO, GPIO_R_TRACKPAD);
 }
 
 /**
  * \return true if Left Trackpad Click Button is being pressed. False otherwise.
  */
 int getLeftTrackpadClickState(void) {
-	return leftTrackpadEnabled && !Chip_GPIO_ReadPortBit(LPC_GPIO, GPIO_L_TRACKPAD);
+	return leftTrackpadClickEnabled && !Chip_GPIO_ReadPortBit(LPC_GPIO, GPIO_L_TRACKPAD);
 }
 
 /**

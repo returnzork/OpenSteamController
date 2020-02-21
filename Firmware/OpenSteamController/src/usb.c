@@ -50,6 +50,12 @@
 #include <string.h>
 #include <stdio.h>
 
+
+
+#include "eeprom_access.h"
+
+
+
 #if (__REDLIB_INTERFACE_VERSION__ >= 20000)
 /* We are using new Redlib_v2 semihosting interface */
 	#define WRITEFUNC __sys_write
@@ -1207,6 +1213,11 @@ typedef struct {
 
 static ControllerUsbData controllerUsbData;
 
+int leftTrackpadEnabled = 1;
+int rightTrackpadEnabled = 1;
+
+
+
 /**
  * Function for converting raw analog X or Y value to analog X or Y value in
  *   range expected by Power A USB control packet. 
@@ -1341,10 +1352,18 @@ static void updateReports(void) {
 
 	// Have Right Trackpad act as Right Analog:
 	trackpadGetLastXY(R_TRACKPAD, &tpad_x, &tpad_y);
-	controllerUsbData.statusReport.rightAnalogX = convToPowerAJoyPos(tpad_x, 
-		0, TPAD_MAX_X/2, TPAD_MAX_X);
-	controllerUsbData.statusReport.rightAnalogY = convToPowerAJoyPos(
-		 TPAD_MAX_Y - tpad_y, 0, TPAD_MAX_Y/2, TPAD_MAX_Y);
+	if(rightTrackpadEnabled)
+	{
+		controllerUsbData.statusReport.rightAnalogX = convToPowerAJoyPos(tpad_x,
+			0, TPAD_MAX_X/2, TPAD_MAX_X);
+		controllerUsbData.statusReport.rightAnalogY = convToPowerAJoyPos(
+			TPAD_MAX_Y - tpad_y, 0, TPAD_MAX_Y/2, TPAD_MAX_Y);
+	}
+	else
+	{
+		controllerUsbData.statusReport.rightAnalogX = convToPowerAJoyPos(TPAD_MAX_X/2, 0, TPAD_MAX_X/2, TPAD_MAX_X);
+		controllerUsbData.statusReport.rightAnalogY = convToPowerAJoyPos(TPAD_MAX_Y - TPAD_MAX_Y/2, 0, TPAD_MAX_Y/2, TPAD_MAX_Y);
+	}
 }
 
 /**
@@ -1462,6 +1481,18 @@ static ErrorCode_t ControllerInit(USBD_HANDLE_T hUsb,
  * \return 0 on success.
  */
 int usbConfig(void){
+
+#define OPTIONS_OFFSET (0x100)
+	void* ptr = malloc(sizeof(int));
+	//offset 16 = left trackpad enabled, currently ignored
+	//offset 17 = right trackpad being enabled
+	eepromRead(OPTIONS_OFFSET + 17, ptr, 8);
+	int rightIsEnabled = (*(int*)ptr) != 1;
+	rightTrackpadEnabled = rightIsEnabled;
+	free(ptr);
+
+
+
 	USBD_API_INIT_PARAM_T usb_param;
 	USB_CORE_DESCS_T desc;
 	ErrorCode_t errCode = ERR_FAILED;
