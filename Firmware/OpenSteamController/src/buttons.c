@@ -120,55 +120,57 @@ void initButtons(void) {
 	void* ptr = malloc(sizeof(int));
 	for(int i = 0; i < 16; i++)
 	{
-		eepromRead(OPTIONS_OFFSET, ptr, 8);
-		switch((uint8_t)ptr) {
+		//read from the offset
+		eepromRead(OPTIONS_OFFSET + i, ptr, 8);
+		int isEnabled = (*(int*)ptr) != 1;
+		switch(i) {
 		case 0:
-			analogJoyClickEnabled = 0;
+			analogJoyClickEnabled = isEnabled;
 			break;
 		case 1:
-			leftGripEnabled = 0;
+			leftGripEnabled = isEnabled;
 			break;
 		case 2:
-			steamButtonEnabled = 0;
+			steamButtonEnabled = isEnabled;
 			break;
 		case 3:
-			leftTrackpadEnabled = 0;
+			leftTrackpadEnabled = isEnabled;
 			break;
 		case 4:
-			leftTriggerEnabled = 0;
+			leftTriggerEnabled = isEnabled;
 			break;
 		case 5:
-			leftBumperEnabled = 0;
+			leftBumperEnabled = isEnabled;
 			break;
 		case 6:
-			frontLeftEnabled = 0;
+			frontLeftEnabled = isEnabled;
 			break;
 		case 7:
-			frontRightEnabled = 0;
+			frontRightEnabled = isEnabled;
 			break;
 		case 8:
-			rightTrackpadEnabled = 0;
+			rightTrackpadEnabled = isEnabled;
 			break;
 		case 9:
-			yButtonEnabled = 0;
+			yButtonEnabled = isEnabled;
 			break;
 		case 10:
-			rightTriggerEnabled = 0;
+			rightTriggerEnabled = isEnabled;
 			break;
 		case 11:
-			rightBumperEnabled = 0;
+			rightBumperEnabled = isEnabled;
 			break;
 		case 12:
-			rightGripEnabled = 0;
+			rightGripEnabled = isEnabled;
 			break;
 		case 13:
-			bButtonEnabled = 0;
+			bButtonEnabled = isEnabled;
 			break;
 		case 14:
-			xButtonEnabled = 0;
+			xButtonEnabled = isEnabled;
 			break;
 		case 15:
-			aButtonEnabled = 0;
+			aButtonEnabled = isEnabled;
 			break;
 		}
 	}
